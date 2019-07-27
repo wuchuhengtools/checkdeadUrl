@@ -70,6 +70,9 @@ class Crawler
             if(!array_key_exists('host', $purl)) {
                 $url = self::$domain . $url;
             }
+            if (array_key_exists('host', $purl) && $purl['host'] !== $pdurl['host']) {
+                continue;
+            }
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HEADER, 1);
@@ -88,7 +91,9 @@ class Crawler
                     json_encode([
                         'url'=>$url, 
                         'micotime'=>microtime(true),
-                        'pid'=>posix_getpid()])
+                        'pid'=>posix_getpid(),
+                        'current_url'  => $current_url
+                    ])
                 );
             } elseif($code !== 200) {
                 $deal_url = [];
@@ -146,16 +151,6 @@ class Crawler
             echo "\n\n* Sub process: {$pid} exited with {$status}";
         } 
     }
-
-
-   /**
-     *   
-     *
-     *
-     */ 
-
 }
 Crawler::runAll();
-for( $i = 1; $i <= 3 ; $i++ ){
-        }
 
